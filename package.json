@@ -1,0 +1,62 @@
+{
+  "name": "customers-api",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node -r dotenv/config dist/main/server.js",
+    "build": "rimraf dist && tsc -p tsconfig-build.json",
+    "up": "npm run build && docker-compose --env-file .env up -d",
+    "down": "docker-compose down",
+    "dev": "nodemon --ignore node_modules -r tsconfig-paths/register -r dotenv/config  src/main/server.ts",
+    "test": "jest --no-cache --passWithNoTests --silent --noStackTrace --runInBand --force-exit",
+    "test:verbose": "jest --no-cache --verbose --passWithNoTests --runInBand --force-exit",
+    "test:unit": "npm test -- --watchAll -c=jest.unit.config.js",
+    "test:integration": "npm test -- --watchAll -c=jest.integration.config.js",
+    "test:ci": "npm test -- --coverage",
+    "fix:lint": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@types/chance": "^1.1.3",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/ioredis": "^4.28.10",
+    "@types/jest": "^29.1.2",
+    "@types/jsonwebtoken": "^8.5.5",
+    "@types/node": "^18.11.0",
+    "@types/supertest": "^2.0.11",
+    "@types/swagger-ui-express": "^4.1.3",
+    "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "chance": "^1.1.8",
+    "enhanced-resolve": "^5.10.0",
+    "eslint": "^8.25.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.0",
+    "eslint-plugin-standard": "^5.0.0",
+    "git-commit-msg-linter": "^4.2.1",
+    "husky": "^8.0.1",
+    "jest": "^29.2.0",
+    "lint-staged": "^13.0.3",
+    "nodemon": "^2.0.20",
+    "rimraf": "^3.0.2",
+    "supertest": "^6.1.6",
+    "ts-jest": "^29.0.3",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "axios": "^1.1.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "ioredis": "^5.2.3",
+    "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
+    "swagger-ui-express": "^4.1.6",
+    "uuid": "^9.0.0"
+  },
+  "_moduleAliases": {
+    "@": "dist"
+  }
+}

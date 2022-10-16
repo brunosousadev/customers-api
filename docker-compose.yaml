@@ -1,0 +1,24 @@
+version: "3"
+services:
+  redis:
+    image: redis:6.2
+    container_name: customer-redis
+    ports:
+      - "6379:6379"
+  api:
+    container_name: customer-api-container
+    image: node:12
+    working_dir: /usr/src/customers-api
+    restart: always
+    command: bash -c "npm install --only=prod && npm run start"
+    environment:
+      - REDIS_URL=redis:6379
+      - AUTH_AZP=${AUTH_AZP}
+      - AUTH_CLIENT_ID=${AUTH_CLIENT_ID}
+    volumes:
+      - ./dist/:/usr/src/customers-api/dist/
+      - ./package.json:/usr/src/customers-api/package.json
+    ports:
+      - "3000:3000"
+    links:
+      - redis
