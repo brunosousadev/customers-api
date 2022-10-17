@@ -83,7 +83,7 @@ yarn down
 
 Nota: se você estiver executando localmente para acessar o serviço, será necessário usar o endereço IP da máquina:
 
-You can find this information running this command on linux:
+Você pode encontrar essas informações executando este comando no linux:
 
 ```
 ip addr show | grep -Po 'inet \K[\d.]+'
@@ -98,3 +98,29 @@ O servidor iniciará em http://127.0.0.1:3000/healthcheck
 yarn build
 yarn start
 ```
+
+
+Teste de Carga.
+
+Adicione no seu ponto env.
+``` bash
+BASE_URL_CUSTOMER_API=
+TOKEN=
+CUSTOMER_ID=
+```
+
+Agora execute o comando abaixo: 
+
+``` bash
+yarn up
+```
+
+
+em seguida existe três scripts que são eles:
+
+- test:load-get-customer
+- test:load-create-customer
+- test:load-update-customer
+
+para rodar qualquer um basta executar no terminal `yarn` + um dos nomes dos scripts
+
