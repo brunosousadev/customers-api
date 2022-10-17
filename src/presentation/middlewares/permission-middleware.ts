@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/dot-notation */
 import { CheckPermission } from '@/data/protocols'
 import { HttpRequest, HttpResponse, Middleware } from '@/presentation/protocols'
 import { ok, serverError, unauthorized } from '@/presentation/helpers'
 import { AccessDeniedError } from '@/presentation/errors'
+import { checkHeaderToken } from './header-helper'
 
 export class PermissionMiddleware implements Middleware {
   constructor (
@@ -12,9 +12,10 @@ export class PermissionMiddleware implements Middleware {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const token = httpRequest.headers?.['authorization']
-      const [, credentials] = token.split(' ')
-      const isValid = this.checkPermission.checkPermission(credentials, this.permission)
+      const token = checkHeaderToken(httpRequest)
+      if (!token) return unauthorized(new AccessDeniedError())
+
+      const isValid = this.checkPermission.checkPermission(token, this.permission)
       if (!isValid) {
         return unauthorized(new AccessDeniedError())
       }
