@@ -4,6 +4,7 @@ import { AccessDeniedError } from '@/presentation/errors'
 import { VerifyToken } from '@/data/protocols'
 import { mockHttpRequest } from '@/tests/presentation/middlewares/mocks'
 import { mockVerifyToken } from '@/tests/data/mock'
+import * as HeaderHelper from '@/presentation/middlewares/header-helper'
 
 type SutTypes = {
   sut: AuthMiddleware
@@ -21,20 +22,17 @@ const makeSut = (): SutTypes => {
 }
 
 describe('Auth Middleware', () => {
-  test('Should return 401 if no token exists in headers', async () => {
+  test('Should call checkHeaderToken with correct values', async () => {
     const { sut } = makeSut()
-    const response = await sut.handle({} as any)
-    expect(response).toEqual(unauthorized(new AccessDeniedError('No authorization header')))
+    const checkHeaderTokenSpy = jest.spyOn(HeaderHelper, 'checkHeaderToken')
+    await sut.handle({} as any)
+    expect(checkHeaderTokenSpy).toHaveBeenCalledWith({})
   })
 
-  test('Should return 401 if type diff Bearer', async () => {
+  test('Should return 401 if checkHeaderToken return null', async () => {
     const { sut } = makeSut()
-    const response = await sut.handle({
-      headers: {
-        authorization: ' '
-      }
-    } as any)
-    expect(response).toEqual(unauthorized(new AccessDeniedError('Wrong auth type')))
+    const response = await sut.handle({} as any)
+    expect(response).toEqual(unauthorized(new AccessDeniedError()))
   })
   test('Should call VerifyToken with correct values', async () => {
     const { sut, verifyTokenSpy } = makeSut()

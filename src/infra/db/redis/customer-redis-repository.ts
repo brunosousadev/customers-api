@@ -32,7 +32,7 @@ export class CustomerRedisRepository implements AddCustomerRepository, FindCusto
 
   async isConnected (): Promise<boolean> {
     try {
-      const pong = await this.redisClient?.ping()
+      const pong = await this.redisClient.ping()
       return !!pong?.length
     } catch (error) {
       return false

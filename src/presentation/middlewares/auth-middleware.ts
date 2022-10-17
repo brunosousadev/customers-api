@@ -3,19 +3,18 @@ import { HttpRequest, HttpResponse, Middleware } from '@/presentation/protocols'
 import { ok, unauthorized, serverError, badGateway } from '@/presentation/helpers'
 import { AccessDeniedError } from '@/presentation/errors'
 import { VerifyToken } from '@/data/protocols'
+import { checkHeaderToken } from './header-helper'
 
 export class AuthMiddleware implements Middleware {
-  constructor (private readonly verifyToken: VerifyToken) { }
+  constructor(private readonly verifyToken: VerifyToken) { }
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const token = httpRequest.headers?.['authorization']
-      if (!token) return unauthorized(new AccessDeniedError('No authorization header'))
 
-      const [type, credentials] = token.split(' ')
-      if (type !== 'Bearer') return unauthorized(new AccessDeniedError('Wrong auth type'))
+      const token = checkHeaderToken(httpRequest)
+      if (!token) return unauthorized(new AccessDeniedError())
 
-      await this.verifyToken.verifyToken(credentials)
+      await this.verifyToken.verifyToken(token)
 
       return ok()
     } catch (error: any) {
